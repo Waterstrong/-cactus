@@ -16,6 +16,10 @@ jar {
     version = "1.0.0"
 }
 
+checkstyle {
+    configProperties.projectDir = project.projectDir
+}
+
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 idea.project.vcs = "Git"
