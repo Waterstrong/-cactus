@@ -7,6 +7,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springVersion}")
+        classpath("net.saliman:gradle-cobertura-plugin:2.3.2")
     }
 }
 
@@ -14,6 +15,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'checkstyle'
+apply plugin: 'net.saliman.cobertura'
 
 repositories {
     mavenCentral()
@@ -25,7 +27,12 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     testCompile("com.jayway.jsonpath:json-path")
     testCompile("org.springframework.boot:spring-boot-starter-test")
+    testRuntime 'org.slf4j:slf4j-api:1.7.21'
 }
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+idea.project.vcs = "Git"
 
 jar {
     baseName = "cactus"
@@ -36,9 +43,22 @@ checkstyle {
     configProperties.projectDir = project.projectDir
 }
 
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
-idea.project.vcs = "Git"
+cobertura {
+    coverageFormats = ['html', 'xml']
+    coverageEncoding = 'UTF-8'
+    coverageExcludes = ['.*Application.*']
+    coverageIgnoreMethodAnnotations = []
+    coverageCheckBranchRate = 90
+    coverageCheckLineRate = 90
+    coverageCheckPackageBranchRate = 90
+    coverageCheckPackageLineRate = 90
+    coverageCheckTotalBranchRate = 90
+    coverageCheckTotalLineRate = 90
+    coverageIgnoreTrivial = true
+    coverageCheckHaltOnFailure = true
+}
+
+check.dependsOn 'coberturaCheck'
 
 defaultTasks 'clean', 'build'
 
